@@ -1,0 +1,14 @@
+{
+  "name": "task_2",
+  "version": "1.0.0",
+  "description": "dependency management and script automation ",
+  "main": "index.js",
+  "scripts": {
+    "calculate": "node index.js"
+    },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}
