@@ -1,9 +1,11 @@
 const express = require("express");
 const axios = require("axios");
 const path = require("path");
+const cors = require("cors")
 const app = express();
 
 app.use(express.static("public"));
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "index.html"));
@@ -19,6 +21,7 @@ app.get("/weather", async (req, res) => {
   try {
     const response = await axios.get(APIUrl);
     weather = response.data;
+    
   } catch (err) {
     weather = null;
     error = "Error, Please try again";
