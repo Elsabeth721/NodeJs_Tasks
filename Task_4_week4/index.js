@@ -8,15 +8,16 @@ let nextId= 1;
 const server =http.createServer((req, res)=>{
     const parsedUrl =parse(req.url, true);
     const method=req.method;
+    console.log(parsedUrl.pathname, method)
 
     res.setHeader('Content-Type', 'application/json');
 
     //GET /users: Return all users
-    if(method == '/GET' && parsedUrl.pathname === '/users'){
+    if(method === 'GET' && parsedUrl.pathname === '/users'){
         res.writeHead(200);
         res.end(JSON.stringify(users));
     }
-    else if(method == 'POST' && parsedUrl.pathname === '/users'){
+    else if(method === 'POST' && parsedUrl.pathname === '/users'){
         let body ='';
 
         req.on('data', chunk =>{
@@ -26,20 +27,23 @@ const server =http.createServer((req, res)=>{
         req.on('end', ()=>{
             const newUSer =JSON.parse(body);
             newUSer.id=nextId++;
-            users.push(newUser);
+            users.push(newUSer);
             res.writeHead(201);//201 --new user has been successfully created
-            res.end(JSON.stringify(newUser));
+            res.end(JSON.stringify(newUSer));
         })
     }
-    else if(method === '/PUT' && parsedUrl.pathname.startsWith === '/users/'){ // targeting users based on their id
+    else if(method === 'PUT' && parsedUrl.pathname.startsWith('/users/')){ // targeting users based on their id
         const id = parseInt(parsedUrl.pathname.split('/')[2], 10);  //extract user ID from the URL
         let body ='';
-        req.on('data', chunk=>{
-            body += chunk.toString();
+        req.on('data', chunk =>{
+            //each chunk is a buffer needs to be converted to string
+            body+= chunk.toString();
         })
+        console.log("BOdy", body)
         req.on('end',()=>{
-            const updatedData =JSON.parse(body);
-            const index =users.findIndex(user=>user.id === id);
+            const updatedData = JSON.parse(body);
+            const index = users.findIndex(user=>user.id === id);
+            console.log("Index", index, users)
             if(index!== -1){
                 users[index]={...users[index], ...updatedData};
                 res.writeHead(200); // 200 --ok update was successful
